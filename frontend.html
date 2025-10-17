@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Currency Converter</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #3b8d99, #6b6b83, #aa4b6b);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      width: 350px;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    select, input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 95%;
+      padding: 10px;
+      background-color: #00c6ff;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #0072ff;
+    }
+    #result {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💱 Currency Converter</h2>
+    <input type="number" id="amount" placeholder="Enter amount" />
+    <select id="fromCurrency">
+      <option value="USD">USD - US Dollar</option>
+      <option value="INR">INR - Indian Rupee</option>
+      <option value="EUR">EUR - Euro</option>
+      <option value="GBP">GBP - British Pound</option>
+      <option value="JPY">JPY - Japanese Yen</option>
+    </select>
+    <select id="toCurrency">
+      <option value="INR">INR - Indian Rupee</option>
+      <option value="USD">USD - US Dollar</option>
+      <option value="EUR">EUR - Euro</option>
+      <option value="GBP">GBP - British Pound</option>
+      <option value="JPY">JPY - Japanese Yen</option>
+    </select>
+    <button onclick="convertCurrency()">Convert</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function convertCurrency() {
+      const amount = document.getElementById("amount").value;
+      const from = document.getElementById("fromCurrency").value;
+      const to = document.getElementById("toCurrency").value;
+
+      if (!amount) {
+        document.getElementById("result").innerText = "⚠️ Please enter an amount.";
+        return;
+      }
+
+      const apiKey = "https://api.exchangerate-api.com/v4/latest/" + from;
+
+      try {
+        const response = await fetch(apiKey);
+        const data = await response.json();
+        const rate = data.rates[to];
+        const result = (amount * rate).toFixed(2);
+
+        document.getElementById("result").innerHTML =
+          `${amount} ${from} = <br><strong>${result} ${to}</strong>`;
+      } catch (error) {
+        document.getElementById("result").innerText = "Error fetching data.";
+      }
+    }
+  </script>
+</body>
+</html>
